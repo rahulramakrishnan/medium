@@ -11,7 +11,7 @@ import (
 type (
 	// TwilioGateway is a gateway to the Twilio API.
 	TwilioGateway interface {
-		SendSMS(mobile, msg string) (*http.Response, error)
+		SendSMS(mobile, msg string) (twilio.Response, error)
 	}
 	twilioGateway struct {
 		client    *http.Client
@@ -29,7 +29,7 @@ func NewTwilioGateway() TwilioGateway {
 	}
 }
 
-func (t *twilioGateway) SendSMS(mobile, msg string) (resp *http.Response, err error) {
+func (t *twilioGateway) SendSMS(mobile, msg string) (resp *twilio.Response, err error) {
 	endpoint := fmt.Sprintf("https://api.twilio.com/2010-04-01/Accounts/%s/Messages.json", t.accountID)
 	values := url.Values{
 		"From": []string{"+16503530259"},
@@ -43,5 +43,6 @@ func (t *twilioGateway) SendSMS(mobile, msg string) (resp *http.Response, err er
 		return nil, err
 	}
 
-	return resp, nil
+	twilioResponse := mapper.ToTwilioResponse(resp)
+	return &twilioResponse, nil
 }

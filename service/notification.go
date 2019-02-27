@@ -5,10 +5,17 @@ type (
 		Notify(username, msg string) error
 	}
 	notification struct {
-		Gateway 
+		gateway TwilioGateway
 	}
 )
 
-func (n *notification) Notify(username, msg string) error {
+// NewNotificationService returns a new notification service instance.
+func NewNotificationService(gateway TwilioGateway) {
+	return &notification{
+		gateway: gateway,
+	}
+}
 
+func (n *notification) Notify(username, msg string) error {
+	n.gateway.
 }
